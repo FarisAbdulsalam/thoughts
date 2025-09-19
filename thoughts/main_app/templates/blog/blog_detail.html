@@ -1,8 +1,8 @@
-<head><title>{{ blog.blog_name }}</title></head>
-<body>
-    <h1>{{ blog.blog_name }}</h1>
-    <p>{{ blog.blog_description }}</p>
-    <h2>Posts</h2>
+{% extends 'base.html' %}
+{% block content %}
+<h1>{{ blog.blog_name }}</h1>
+<p>{{ blog.blog_description }}</p>
+<h2>Posts</h2>
     {% if posts %}
         <ul>
             {% for post in posts %}
@@ -15,5 +15,5 @@
     {% else %}
         <p>No posts yet.</p>
     {% endif %}
-    <a href="{% url 'blog_list' %}">Back to Blogs</a>
-</body>
+<a href="{% url 'blog_list' %}">Back to Blogs</a>
+{% endblock %}
