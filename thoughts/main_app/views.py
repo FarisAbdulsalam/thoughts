@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
-from .models import Blog, Post
+from .models import Blog, Post, Comment
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -26,3 +27,16 @@ def post_detail(request, post_id):
         return redirect("blog_list")
 
     return render(request, "blog/post_detail.html", {"post": post, "comments": comments})
+
+@login_required
+def add_comment(request, post_id):
+    post = Post.objects.get(id=post_id)
+    if request.method == "POST":
+        content = request.POST.get("comment_content")
+        if content:
+            Comment.objects.create(
+                user=request.user,
+                post=post,
+                comment_content=content
+            )
+        return redirect("post_detail", post_id=post.id)
