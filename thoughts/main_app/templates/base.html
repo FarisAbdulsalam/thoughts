@@ -10,7 +10,18 @@
     <header>
         <nav>
             <ul>
-                <li><a href="{% url 'blog_index' %}">Home</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'blog_index' %}">Home</a></li>
+                        <li>
+                            <form method="post" action="{% url 'sign_out' %}">
+                                {% csrf_token %}
+                                <button type="submit">Sign Out</button>
+                            </form>
+                        </li>
+                {% else %}
+                    <li><a href="{% url 'sign_up' %}">Sign Up</a></li>
+                    <li><a href="{% url 'sign_in' %}">Sign In</a></li>
+                {% endif %}
             </ul>
         </nav>
     </header>

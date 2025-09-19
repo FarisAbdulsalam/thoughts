@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from .models import Blog, Post, Comment
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login
 
 # Create your views here.
 
@@ -40,3 +42,25 @@ def add_comment(request, post_id):
                 comment_content=content
             )
         return redirect("post_detail", post_id=post.id)
+
+@login_required
+def delete_comment(request, comment_id):
+    comment = Comment.objects.get(id=comment_id)
+    if request.user == comment.user:
+        post_id = comment.post.id
+        comment.delete()
+        return redirect("post_detail", post_id=post_id)
+    
+def sign_up(request):
+  error_message=''
+  if request.method == 'POST':
+    form = UserCreationForm(request.POST)
+    if form.is_valid():
+      user = form.save()
+      login(request, user)
+      return redirect('index')
+    else:
+      error_message = 'Invalid sign-up, please try again'
+  form = UserCreationForm()
+  context = {'form': form, 'error_message': error_message}
+  return render(request, 'registration/signup.html', context)
