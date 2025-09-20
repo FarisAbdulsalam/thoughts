@@ -3,6 +3,10 @@ from .models import Blog, Post, Comment
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
+from .forms import BlogForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic.edit import UpdateView
+from django.urls import reverse
 
 # Create your views here.
 def home(request):
@@ -12,7 +16,6 @@ def blog_index(request):
     blogs = Blog.objects.all()
     return render(request, "blog/blog_index.html", {"blogs": blogs})
 
-
 def blog_detail(request, blog_id):
     try:
         blog = Blog.objects.get(id=blog_id)
@@ -21,7 +24,6 @@ def blog_detail(request, blog_id):
         return redirect("blog_list")
 
     return render(request, "blog/blog_detail.html", {"blog": blog, "posts": posts})
-
 
 def post_detail(request, post_id):
     try:
@@ -66,3 +68,27 @@ def sign_up(request):
   form = UserCreationForm()
   context = {'form': form, 'error_message': error_message}
   return render(request, 'registration/signup.html', context)
+
+@login_required
+def create_blog(request):
+    if hasattr(request.user, "blog"):
+        return redirect("blog_detail", blog_id=request.user.blog.id)
+    form = BlogForm(request.POST)
+    if form.is_valid():
+        blog = form.save(commit=False)
+        blog.owner = request.user
+        blog.save()
+        return redirect("blog_detail", blog_id=blog.id)
+    return render(request, "blog/create_blog.html", {"form": form})
+
+class BlogUpdateView(LoginRequiredMixin, UpdateView):
+    model = Blog
+    fields = ['blog_name', "blog_description"]
+    template_name = 'blog/edit_blog.html'
+    
+    def get_object(self):
+        return self.request.user.blog
+    
+    def get_success_url(self):
+        return reverse("blog_detail", args=[self.request.user.blog.id])
+

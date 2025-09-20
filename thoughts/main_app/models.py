@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 
 class Blog(models.Model):
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.OneToOneField(User, on_delete=models.CASCADE)
     blog_name = models.CharField(max_length=200)
     blog_description = models.TextField(max_length=3000, blank=True, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
