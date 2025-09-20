@@ -2,7 +2,10 @@
 {% block content %}
 <h1>{{ blog.blog_name }}</h1>
 <p>{{ blog.blog_description }}</p>
-<a href="{% url 'edit_blog' %}">Edit Blog</a>
+{% if request.user == blog.owner %}
+    <a href="{% url 'edit_blog' %}">Edit Blog</a>
+    <a href="{% url 'create_post' %}">Create Post</a>
+{% endif %}
 <h2>Posts</h2>
     {% if posts %}
         <ul>

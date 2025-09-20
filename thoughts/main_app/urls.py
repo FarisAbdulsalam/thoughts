@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
-from .views import BlogUpdateView
+from .views import BlogUpdateView, PostCreateView, PostUpdateView, PostDeleteView
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -15,4 +15,8 @@ urlpatterns = [
     path('sign_out/', auth_views.LogoutView.as_view(), name='sign_out'),
     path('create_blog/', views.create_blog, name='create_blog'),
     path('edit_blog/', BlogUpdateView.as_view(), name='edit_blog'),
+    path('create_post/', PostCreateView.as_view(), name='create_post'),
+    path('post/<int:pk>/edit/', PostUpdateView.as_view(), name='edit_post'),
+    path('post/<int:pk>/delete/', PostDeleteView.as_view(), name='delete_post'),
+    
 ]
