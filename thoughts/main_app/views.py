@@ -5,6 +5,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 
 # Create your views here.
+def home(request):
+  return render(request, 'home.html')
 
 def blog_index(request):
     blogs = Blog.objects.all()
