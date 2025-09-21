@@ -1,7 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
 <h1>{{ post.title }}</h1>
-<a href="{% url 'edit_post' post.id %}">Edit Post</a>
+{% if request.user == blog.owner %}
+    <a href="{% url 'edit_post' post.id %}">Edit Post</a>
+    <a href="{% url 'delete_post' post.id %}">Delete Post</a>
+{% endif %}
 <p>{{ post.content }}</p>
 <p>Created: {{ post.created_date}} Last updated: {{ post.updated_date }}</p>
 <hr>
@@ -24,6 +27,7 @@
                     {% csrf_token %}
                     <button type="submit">Delete</button>
                 </form>
+                <a href="{% url 'edit_comment' comment.id %}">Edit</a>
             {% endif %}
         {% endfor %}
     </ul>

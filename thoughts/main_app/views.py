@@ -130,3 +130,17 @@ class PostDeleteView(LoginRequiredMixin, DeleteView):
 
     def get_success_url(self):
         return reverse('blog_detail', kwargs={"blog_id": self.request.user.blog.id})
+
+class CommentUpdateView(LoginRequiredMixin, UpdateView):
+    model = Comment
+    fields = ['comment_content']
+    template_name = 'blog/edit_comment.html'
+
+    def get_object(self):
+        comment = Comment.objects.get(id=self.kwargs['pk'])
+        if comment.user != self.request.user: 
+            raise Http404
+        return comment
+
+    def get_success_url(self):
+        return reverse("post_detail", kwargs={"post_id": self.object.post.id})
