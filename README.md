@@ -4,7 +4,7 @@ A simple blog application built using Django where each user can create their ow
 
 ---
 
-## Technoligies Used
+## Technologies Used
 
 - Django
 - PostgreSQL
