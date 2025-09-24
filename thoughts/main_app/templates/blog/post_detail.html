@@ -1,39 +1,76 @@
-{% extends 'base.html' %}
-{% block content %}
-<h1>{{ post.title }}</h1>
-{% if request.user == blog.owner %}
-    <a href="{% url 'edit_post' post.id %}">Edit Post</a>
-    <a href="{% url 'delete_post' post.id %}">Delete Post</a>
-{% endif %}
-<p>{{ post.content }}</p>
-<p>Created: {{ post.created_date}} Last updated: {{ post.updated_date }}</p>
-<hr>
-<h3>Add a Comment</h3>
-<form method="post" action="{% url 'add_comment' post.id %}">
-    {% csrf_token %}
-    <textarea name="comment_content"></textarea>
-    <button type="submit">Submit Comment</button>
-</form>
-<h2>Comments</h2>
-{% if comments %}
-    <ul>
-        {% for comment in comments %}
-            <li>
-                <small>Comment Published On: {{ comment.date_published}}</small> <br>
-                {{ comment.user.username }}: {{ comment.comment_content }}
-            </li>
-            {% if request.user == comment.user %}
-                <form method="post" action="{% url 'delete_comment' comment.id %}">
-                    {% csrf_token %}
-                    <button type="submit">Delete</button>
-                </form>
-                <a href="{% url 'edit_comment' comment.id %}">Edit</a>
-            {% endif %}
-        {% endfor %}
+{% extends 'base.html' %} {% block content %}
+<div class="container">
+  <div class="section">
+    <h3 class="center-align">{{ post.title }}</h3>
+    {% if request.user == blog.owner %}
+    <div class="center-align">
+      <a href="{% url 'edit_post' post.id %}">Edit Post</a>
+      <a href="{% url 'delete_post' post.id %}">Delete Post</a>
+    </div>
+    {% endif %}
+    <p class="flow-text">{{ post.content }}</p>
+    <p class="grey-text">
+      Created: {{ post.created_date}} Last updated: {{ post.updated_date }}
+    </p>
+  </div>
+  <div class="divider"></div>
+
+  <div class="section">
+    {% if user.is_authenticated %}
+    <h5>Add a Comment</h5>
+    <form method="post" action="{% url 'add_comment' post.id %}">
+      {% csrf_token %}
+      <div class="input-field">
+        <textarea
+          name="comment_content"
+          class="materialize-textarea"
+        ></textarea>
+      </div>
+      <button type="submit">Submit Comment</button>
+    </form>
+    {% endif %}
+  </div>
+  <div class="divider"></div>
+  <div class="section">
+    <h5>Comments</h5>
+    {% if comments %}
+    <ul class="collection">
+      {% for comment in comments %}
+      <li class="collection-item">
+        <span class="title">
+          <strong>{{ comment.user.username }}</strong>
+        </span>
+        <p>{{ comment.comment_content }}</p>
+        <small class="grey-text"
+          >Published: {{ comment.date_published }}</small
+        >
+        {% if request.user == comment.user %}
+        <div class="right-align" style="margin-top: 10px">
+          <form
+            method="post"
+            action="{% url 'delete_comment' comment.id %}"
+            style="display: inline"
+          >
+            {% csrf_token %}
+            <button type="submit" class="btn-small red">Delete</button>
+          </form>
+          <a href="{% url 'edit_comment' comment.id %}" class="btn-small blue"
+            >Edit</a
+          >
+        </div>
+        {% endif %}
+      </li>
+      {% endfor %}
     </ul>
-{% else %}
-    <p>No comments yet.</p>
-{% endif %}
-<hr>
-<a href="{% url 'blog_detail' post.blog.id %}">Back to Blog</a>
+    {% else %}
+    <p class="grey-text">No comments yet.</p>
+    {% endif %}
+  </div>
+
+  <div class="section center-align">
+    <a href="{% url 'blog_detail' post.blog.id %}" class="btn grey"
+      >Back to Blog</a
+    >
+  </div>
+</div>
 {% endblock %}

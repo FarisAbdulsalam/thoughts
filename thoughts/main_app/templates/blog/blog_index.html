@@ -1,16 +1,28 @@
-{% extends 'base.html' %}
-{% block content %}
-<h1>All Blogs</h1>
-{% if blogs %}
-    <ul>
-        {% for blog in blogs %}
-            <li>
-                <a href="{% url 'blog_detail' blog.id %}">{{ blog.blog_name }}</a>
-                (by {{ blog.owner.username }})
-            </li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>No blogs yet.</p>
-{% endif %}
+{% extends 'base.html' %} {% block content %}
+<div class="container">
+  <div class="section center-align">
+    <h3>All Blogs</h3>
+  </div>
+  {% if blogs %}
+  <div class="row">
+    {% for blog in blogs %}
+    <div class="col s12 m6 14">
+      <div class="card hoverable">
+        <div class="card-content">
+          <span class="card-title">
+            <p> {{ blog.blog_name }} </p>
+          </span>
+          <p class="grey-text">(by {{ blog.owner.username }})</p>
+        </div>
+        <div class="card-action">
+          <a href="{% url 'blog_detail' blog.id %}">View Blog</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="red-text center-align">No blogs yet.</p>
+  {% endif %}
+</div>
 {% endblock %}

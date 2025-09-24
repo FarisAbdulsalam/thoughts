@@ -1,41 +1,46 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" />
-    <title>Thoughts</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"/>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <title>Thoughts</title>
 </head>
 <body>
-    <header>
-        <nav>
-            <ul>
-                {% if user.is_authenticated %}
-                    <li><a href="{% url 'home' %}">Home</a></li>
-                    <li><a href="{% url 'blog_index' %}">All Blogs</a></li>
-                    <li><a href="{% url 'create_blog' %}">Create Blog</a></li>
-                        <li>
-                            <form method="post" action="{% url 'sign_out' %}">
-                                {% csrf_token %}
-                                <button type="submit">Sign Out</button>
-                            </form>
-                        </li>
-                    
-                {% else %}
-                    <li><a href="{% url 'home' %}">Home</a></li>
-                    <li><a href="{% url 'blog_index' %}">All Blogs</a></li>
-                    <li><a href="{% url 'sign_up' %}">Sign Up</a></li>
-                    <li><a href="{% url 'sign_in' %}">Sign In</a></li>
-                {% endif %}
-            </ul>
-        </nav>
-    </header>
-    <main>
-        {% block content %}
-        {% endblock %}
-    </main>
-    <footer>
-        <p>Thoughts</p>
-    </footer>
+      <header>
+    <nav class="blue darken-2">
+      <div class="nav-wrapper container">
+        <a href="{% url 'home' %}" class="brand-logo">Thoughts</a>
+        <ul class="right">
+          {% if user.is_authenticated %}
+            <li><a href="{% url 'blog_index' %}">All Blogs</a></li>
+            <li><a href="{% url 'create_blog' %}">Create Blog</a></li>
+            <li>
+              <form method="post" action="{% url 'sign_out' %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn-flat white-text">Sign Out</button>
+              </form>
+            </li>
+          {% else %}
+            <li><a href="{% url 'blog_index' %}">All Blogs</a></li>
+            <li><a href="{% url 'sign_up' %}">Sign Up</a></li>
+            <li><a href="{% url 'sign_in' %}">Sign In</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>
+  </header>
+  <main class="container">
+    {% block content %}
+    {% endblock %}
+  </main>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      M.updateTextFields();
+    });
+  </script>
 </body>
 </html>
